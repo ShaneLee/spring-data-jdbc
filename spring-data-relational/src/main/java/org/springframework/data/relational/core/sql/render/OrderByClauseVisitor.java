@@ -15,6 +15,7 @@
  */
 package org.springframework.data.relational.core.sql.render;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.relational.core.sql.Column;
 import org.springframework.data.relational.core.sql.OrderByField;
 import org.springframework.data.relational.core.sql.Visitable;
@@ -64,6 +65,10 @@ class OrderByClauseVisitor extends TypedSubtreeVisitor<OrderByField> implements 
 		if (field.getDirection() != null) {
 			builder.append(" ") //
 					.append(field.getDirection());
+
+			if (field.getNullHandling() != Sort.NullHandling.NATIVE) {
+			    builder.append(field.getNullHandling() == Sort.NullHandling.NULLS_LAST ? " NULLS LAST" : " NULLS FIRST");
+			}
 		}
 
 		return Delegation.leave();
