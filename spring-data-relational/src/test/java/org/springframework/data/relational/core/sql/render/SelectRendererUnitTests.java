@@ -18,6 +18,7 @@ package org.springframework.data.relational.core.sql.render;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.relational.core.dialect.PostgresDialect;
 import org.springframework.data.relational.core.dialect.RenderContextFactory;
 import org.springframework.data.relational.core.sql.*;
@@ -267,6 +268,40 @@ class SelectRendererUnitTests {
 
 		assertThat(SqlRenderer.toString(select))
 				.isEqualTo("SELECT emp.name FROM employee emp ORDER BY emp.name ASC");
+	}
+
+	@Test
+	void shouldRenderOrderByNameWithNullsLast() {
+
+		Table employee = SQL.table("employee").as("emp");
+		Column column = employee.column("name");
+
+		Select select = Select.builder()
+				.select(column)
+				.from(employee)
+				.orderBy(OrderByField.from(column).asc()
+				.withNullHandling(Sort.NullHandling.NULLS_LAST))
+				.build();
+
+		assertThat(SqlRenderer.toString(select))
+				.isEqualTo("SELECT emp.name FROM employee emp ORDER BY emp.name ASC NULLS LAST");
+	}
+
+	@Test
+	void shouldRenderOrderByNameWithNullsFirst() {
+
+		Table employee = SQL.table("employee").as("emp");
+		Column column = employee.column("name");
+
+		Select select = Select.builder()
+				.select(column)
+				.from(employee)
+				.orderBy(OrderByField.from(column).asc()
+				.withNullHandling(Sort.NullHandling.NULLS_FIRST))
+				.build();
+
+		assertThat(SqlRenderer.toString(select))
+				.isEqualTo("SELECT emp.name FROM employee emp ORDER BY emp.name ASC NULLS FIRST");
 	}
 
 	@Test // GH-968
@@ -574,5 +609,32 @@ class SelectRendererUnitTests {
 		String rendered = SqlRenderer.toString(select);
 		assertThat(rendered)
 				.isEqualTo("SELECT * FROM tableA JOIN tableB ON tableA.id = tableB.id ORDER BY tableA.name, tableB.name");
+	}
+
+	@Test
+	void rendersFullyQualifiedNamesInOrderByWithNullHandling() {
+
+		Table tableA = SQL.table("tableA");
+		Column tableAName = tableA.column("name");
+		Column tableAId = tableA.column("id");
+
+		Table tableB = SQL.table("tableB");
+		Column tableBId = tableB.column("id");
+		Column tableBName = tableB.column("name");
+
+		Select select = StatementBuilder.select(Expressions.asterisk()) //
+				.from(tableA) //
+				.join(tableB).on(tableAId.isEqualTo(tableBId)) //
+				.orderBy(OrderByField.from(tableAName)
+						.asc()
+						.withNullHandling(Sort.NullHandling.NULLS_LAST),
+						OrderByField.from(tableBName)
+								.asc()
+								.withNullHandling(Sort.NullHandling.NULLS_FIRST))
+				.build();
+
+		String rendered = SqlRenderer.toString(select);
+		assertThat(rendered)
+				.isEqualTo("SELECT * FROM tableA JOIN tableB ON tableA.id = tableB.id ORDER BY tableA.name ASC NULLS LAST, tableB.name ASC NULLS FIRST");
 	}
 }
