@@ -185,6 +185,30 @@ public abstract class Conditions {
 	}
 
 	/**
+	 * Creates a {@code SIMILAR TO} {@link Condition}.
+	 *
+	 * @param leftColumnOrExpression left side of the comparison.
+	 * @param rightColumnOrExpression right side of the comparison.
+	 * @return the {@link Comparison} condition.
+	 * @since 2.4
+	 */
+	public static SimilarTo similarTo(Expression leftColumnOrExpression, Expression rightColumnOrExpression) {
+		return SimilarTo.create(leftColumnOrExpression, rightColumnOrExpression);
+	}
+
+	/**
+	 * Creates a {@code NOT SIMILAR TO} {@link Condition}.
+	 *
+	 * @param leftColumnOrExpression left side of the comparison.
+	 * @param rightColumnOrExpression right side of the comparison.
+	 * @return the {@link Comparison} condition.
+	 * @since 2.4
+	 */
+	public static SimilarTo notSimilarTo(Expression leftColumnOrExpression, Expression rightColumnOrExpression) {
+		return SimilarTo.create(leftColumnOrExpression, rightColumnOrExpression).not();
+	}
+
+	/**
 	 * Creates a {@code IN} {@link Condition clause}.
 	 *
 	 * @param columnOrExpression left side of the comparison.

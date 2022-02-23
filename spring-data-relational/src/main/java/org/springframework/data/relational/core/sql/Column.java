@@ -249,6 +249,28 @@ public class Column extends AbstractSegment implements Expression, Named {
 	}
 
 	/**
+	 * Creates a {@code SIMILAR TO} {@link Condition}.
+	 *
+	 * @param expression right side of the comparison.
+	 * @return the {@link SimilarTo} condition.
+	 * @since 2.4
+	 */
+	public SimilarTo similarTo(Expression expression) {
+		return Conditions.similarTo(this, expression);
+	}
+
+	/**
+	 * Creates a {@code NOT SIMILAR TO} {@link Condition}.
+	 *
+	 * @param expression right side of the comparison.
+	 * @return the {@link SimilarTo} condition.
+	 * @since 2.4
+	 */
+	public SimilarTo notSimilarTo(Expression expression) {
+		return Conditions.notSimilarTo(this, expression);
+	}
+
+	/**
 	 * Creates a new {@link In} {@link Condition} given right {@link Expression}s.
 	 *
 	 * @param expression right side of the comparison.

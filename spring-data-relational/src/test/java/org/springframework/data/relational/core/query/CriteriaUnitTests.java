@@ -260,6 +260,24 @@ public class CriteriaUnitTests {
 		assertThat(criteria.getValue()).isEqualTo("hello%");
 	}
 
+	@Test
+	public void shouldBuildSimilarToCriteria() {
+		Criteria criteria = where("foo").similarTo("%(b|d)%");
+
+		assertThat(criteria.getColumn()).isEqualTo(SqlIdentifier.unquoted("foo"));
+		assertThat(criteria.getComparator()).isEqualTo(Comparator.SIMILAR_TO);
+		assertThat(criteria.getValue()).isEqualTo("%(b|d)%");
+	}
+
+	@Test
+	public void shouldBuildNotSimilarToCriteria() {
+		Criteria criteria = where("foo").notSimilarTo("%(b|d)%");
+
+		assertThat(criteria.getColumn()).isEqualTo(SqlIdentifier.unquoted("foo"));
+		assertThat(criteria.getComparator()).isEqualTo(Comparator.NOT_SIMILAR_TO);
+		assertThat(criteria.getValue()).isEqualTo("%(b|d)%");
+	}
+
 	@Test // DATAJDBC-513
 	public void shouldBuildIsNullCriteria() {
 

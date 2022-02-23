@@ -367,6 +367,16 @@ public class QueryMapperUnitTests {
 		assertThat(condition).hasToString("person.\"NAME\" LIKE ?[:name]");
 	}
 
+	@Test
+	public void shouldMapIsSimilarTo() {
+
+		Criteria criteria = Criteria.where("name").similarTo("a");
+
+		Condition condition = map(criteria);
+
+		assertThat(condition).hasToString("person.\"NAME\" SIMILAR TO ?[:name]");
+	}
+
 	@Test // DATAJDBC-318
 	public void shouldMapSort() {
 

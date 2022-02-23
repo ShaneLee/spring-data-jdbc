@@ -25,6 +25,7 @@ import org.springframework.data.relational.core.sql.IsNull;
 import org.springframework.data.relational.core.sql.Like;
 import org.springframework.data.relational.core.sql.NestedCondition;
 import org.springframework.data.relational.core.sql.OrCondition;
+import org.springframework.data.relational.core.sql.SimilarTo;
 import org.springframework.lang.Nullable;
 
 /**
@@ -41,6 +42,7 @@ import org.springframework.lang.Nullable;
  * @see Comparison
  * @see Like
  * @see In
+ * @see SimilarTo
  */
 class ConditionVisitor extends TypedSubtreeVisitor<Condition> implements PartRenderer {
 
@@ -88,6 +90,10 @@ class ConditionVisitor extends TypedSubtreeVisitor<Condition> implements PartRen
 
 		if (segment instanceof Like) {
 			return new LikeVisitor((Like) segment, context, builder::append);
+		}
+
+		if (segment instanceof SimilarTo) {
+			return new SimilarToVisitor((SimilarTo) segment, context, builder::append);
 		}
 
 		if (segment instanceof In) {

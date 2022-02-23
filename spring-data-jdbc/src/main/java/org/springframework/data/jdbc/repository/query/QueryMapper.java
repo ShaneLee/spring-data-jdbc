@@ -585,6 +585,10 @@ class QueryMapper {
 				Expression expression = bind(mappedValue, sqlType, parameterSource, refName, ignoreCase);
 				return Conditions.notLike(columnExpression, expression);
 			}
+			case SIMILAR_TO: {
+				Expression expression = bind(mappedValue, sqlType, parameterSource, refName, ignoreCase);
+				return Conditions.similarTo(columnExpression, expression);
+			}
 			default:
 				throw new UnsupportedOperationException("Comparator " + comparator + " not supported");
 		}

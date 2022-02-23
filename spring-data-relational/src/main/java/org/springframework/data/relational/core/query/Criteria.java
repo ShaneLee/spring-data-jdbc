@@ -608,6 +608,22 @@ public class Criteria implements CriteriaDefinition {
 		Criteria notLike(Object value);
 
 		/**
+		 * Creates a {@link Criteria} using {@code SIMILAR TO}.
+		 *
+		 * @param value must not be {@literal null}
+		 * @return a new {@link Criteria} object
+		 */
+		Criteria similarTo(Object value);
+
+		/**
+		 * Creates a {@link Criteria} using {@code NOT SIMILAR TO}.
+		 *
+		 * @param value must not be {@literal null}
+		 * @return a new {@link Criteria} object
+		 */
+		Criteria notSimilarTo(Object value);
+
+		/**
 		 * Creates a {@link Criteria} using {@code IS NULL}.
 		 */
 		Criteria isNull();
@@ -823,6 +839,26 @@ public class Criteria implements CriteriaDefinition {
 		public Criteria notLike(Object value) {
 			Assert.notNull(value, "Value must not be null!");
 			return createCriteria(Comparator.NOT_LIKE, value);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.springframework.data.relational.query.Criteria.CriteriaStep#similarTo(java.lang.Object)
+		 */
+		@Override
+		public Criteria similarTo(Object value) {
+			Assert.notNull(value, "Value must not be null!");
+			return createCriteria(Comparator.SIMILAR_TO, value);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.springframework.data.relational.query.Criteria.CriteriaStep#notSimilarTo(java.lang.Object)
+		 */
+		@Override
+		public Criteria notSimilarTo(Object value) {
+			Assert.notNull(value, "Value must not be null!");
+			return createCriteria(Comparator.NOT_SIMILAR_TO, value);
 		}
 
 		/*

@@ -201,6 +201,22 @@ public class ConditionRendererUnitTests {
 		assertThat(sql).endsWith("WHERE my_table.left NOT LIKE my_table.right");
 	}
 
+	@Test
+	public void shouldRenderSimilarTo() {
+
+		String sql = SqlRenderer.toString(StatementBuilder.select(left).from(table).where(left.similarTo(right)).build());
+
+		assertThat(sql).endsWith("WHERE my_table.left SIMILAR TO my_table.right");
+	}
+
+	@Test
+	public void shouldRenderNotSimilarTo() {
+
+		String sql = SqlRenderer.toString(StatementBuilder.select(left).from(table).where(left.notSimilarTo(right)).build());
+
+		assertThat(sql).endsWith("WHERE my_table.left NOT SIMILAR TO my_table.right");
+	}
+
 	@Test // DATAJDBC-309
 	public void shouldRenderIsNull() {
 
